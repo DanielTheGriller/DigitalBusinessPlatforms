@@ -1,0 +1,4 @@
+2020-07-06 Added: Urban Audit 2004, Urban Audit 2001, Local Administrative Units 2019.
+2020-09-02 Added: Urban Audit 2004, Urban Audit 2001, Local Administrative Units 2019.
+* 2020-10-05 Point snapping is disabled in all datasets, number of decimals increased for 01M datasets.
+* 2020-12-05 Fixed broken utf-8 encoding.

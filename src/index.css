@@ -1,0 +1,66 @@
+.dashboardrow {
+  display: flex;
+  flex-direction: row;
+  margin-top: 2vh;
+  align-items: center;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  margin-top: 0;
+}
+
+.welcome {
+  width: 100%;
+  display: inline-block;
+  text-align: center;
+  margin-top: 10%;
+}
+
+.mapLegend {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  z-index: 1;
+  margin-top: 0;
+}
+
+p.mapLegend {
+  font-size: 1.2rem;
+  margin-right: 6vw;
+}
+
+.colorblock {
+  display:inline-block;
+  margin-top: 4px;
+  margin-right: 0.5vw;
+  width: 2.5rem;
+  height: 1.4rem;
+}
+
+.emergencyWindow{
+  position: absolute;
+  box-shadow: 4px 4px;
+  right: 4vw;
+  display: block;
+  width: 15vw;
+  padding: 1rem;
+  margin-top: 3vw;
+  background-color: yellow;
+  border: solid;
+  z-index: 1;
+}
+
+.emergency {
+  font-size: 14px;
+}
+
+.arrdeplist {
+
+}
+
+.arrdeplistitem{
+  tab-size: 10vw;
+}
