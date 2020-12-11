@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { LineChart, BarChart, PieChart, Line, Bar, Pie, XAxis, YAxis,
+import { BarChart, PieChart, Line, Bar, Pie, XAxis, YAxis, Brush,
     CartesianGrid, Tooltip, ComposedChart, Legend, ReferenceLine, Label, Cell} from 'recharts';
 import {
   BrowserRouter as Router,
@@ -13,6 +13,22 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { withScriptjs, withGoogleMap, GoogleMap, Polyline } from "react-google-maps";
 import './index.css';
 const data = require('./data/data');
+
+
+
+class CustomizedAxisTick extends React.PureComponent {
+  render() {
+    const {
+      x, y, payload,
+    } = this.props;
+
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform="rotate(-35)">{payload.value}</text>
+      </g>
+    );
+  }
+}
 
 
 
@@ -238,21 +254,72 @@ class FlightEmergencyClass extends React.Component {
 
 class ArrivalDepartureListClass extends React.Component {
   render(){
-    const city = this.props.city;
+    const header = this.props.header;
     const flights = this.props.flightData;
-    let list = [];
-    if(flights){
-      flights.map(f => list.push(`${f.number}\tETD: ${f.etd}\tETA: ${f.eta}\tDestination: ${f.destination}\tPassengers: ${f.passengers}\tEstimated delay: ${f.estimated_delay}\tReason: ${f.reason_of_delay}`))
-    } else { list = [] }
+    let dataArray = [];
+    const getData = () => {
+      if (flights) {
+      flights.forEach((f,i) => {
+          dataArray.push(<tr key={i} className={`tablerow${i%2}`}><td>{f.number}</td><td>{f.etd}</td><td>{f.eta}</td><td>{f.destination}</td><td>{f.passengers}</td><td>{f.estimated_delay}</td><td>{f.reason_of_delay}</td></tr>)
+            })
+      } else {
+        dataArray = ['no data']
+        }
+      }
+    getData();
+
     return(
-      <div className="dashboard">
-        <h1>{city}</h1>
-          <ul className="arrdeplist">
-            {list.map(a => <li className="arrdeplistitem">{a}</li>)}
-          </ul>
+      <div className="dashboard" align="center" >
+        <h1 className="tableHeader">{header}</h1>
+        <div className="tableScrollable">
+          <table className="arrdeplist">
+            <tr align="center" >
+              <th>Flight number</th>
+              <th>Estimated Time of Departure</th>
+              <th>Estimated Time of Arrival</th>
+              <th>{this.props.origOrDest}</th>
+              <th>Passengers</th>
+              <th>Estimated delay</th>
+              <th>Reason of delay</th>
+            </tr>
+            {dataArray.map(f => f)}
+          </table>
+        </div>
+        <div className="passengerAmount">
+          <h3>Passengers per flight</h3>
+          <BarChart width={1800} height={500} data={flights}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="number" tick={<CustomizedAxisTick />}/>
+            <YAxis type="number" domain={[0, 350]}/>
+            <Tooltip />
+            <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '20px' }} />
+            <Bar dataKey="passengers" fill="#FFBD00" />
+            <Brush dataKey="number" height={20} stroke="#FFBD00" y={430}/>
+          </BarChart>
+        </div>
       </div>
     );
   };
+}
+
+
+
+class AirportClass extends React.Component {
+  render() {
+    return(
+      <div align="center">
+        <h3>{this.props.header}</h3>
+        <BarChart width={640} height={600} data={this.props.data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="location" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="amount" fill={this.props.color} />
+        </BarChart>
+      </div>
+    );
+  }
 }
 
 
@@ -279,11 +346,8 @@ class ArrivalDepartureDashboard extends React.Component {
   render() {
     return (
       <div className="dashboard">
-        <div className="dashboardrow">
-          <ArrivalDepartureListClass flightData={data.helsinkiFlightsList} city='Helsinki' />
-          <ArrivalDepartureListClass city="Stockholm"/>
-          <ArrivalDepartureListClass city="Oslo"/>
-        </div>
+        <ArrivalDepartureListClass flightData={data.helsinkiDepartingFlightsList} origOrDest='Destination' header='Helsinki departing flights' />
+        <ArrivalDepartureListClass flightData={data.helsinkiArrivingFlightsList} origOrDest='Origin' header='Helsinki arriving flights' />
       </div>
     );
   }
@@ -304,9 +368,12 @@ class WeatherDashboard extends React.Component {
 class AirportDashboard extends React.Component {
   render() {
     return (
-      <div className="dashboard">
+      <div className="dashboard" align="center">
+        <h1>Airport dashboard</h1>
         <div className="dashboardrow">
-          <h1>Airport dashboard</h1>
+          <AirportClass data={data.airportPeople} header='People at the airport' color="#FFBD00"/>
+          <AirportClass data={data.airportEmployees} header='Employees at the airport' color="#F366FF"/>
+          <AirportClass data={data.airportPlanes} header='Airplanes at the airport' color="#2CFF95"/>
         </div>
       </div>
     );

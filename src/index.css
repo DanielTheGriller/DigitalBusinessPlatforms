@@ -57,10 +57,40 @@ p.mapLegend {
   font-size: 14px;
 }
 
-.arrdeplist {
+.tableScrollable {
+  width: 100vw;
+  overflow-y: scroll;
+  height: 50vh;
+  text-align: center;
+  margin-bottom: 5vh;
+}
+
+.arrdeplist{
+  width: 100%;
 
 }
 
-.arrdeplistitem{
-  tab-size: 10vw;
+.tablerow1 {
+  background-color: #FFDF83;
+}
+
+.tablerow0 {
+  background-color: #FFF4D4;
+}
+
+.passengerAmount{
+  margin-bottom: 5vh;
+  align-items: center;
+}
+th {
+  background-color: #FFBD00;
+}
+
+table td {
+  border-left: 1px solid;
+  border-right: 1px solid;
+}
+table th {
+  border-left: 1px solid;
+  border-right: 1px solid;
 }
